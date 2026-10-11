@@ -1,0 +1,93 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- No INTERNET. No CAMERA. The torch API needs no camera permission. -->
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <!-- Requested at runtime on Android 13+ only when the user enables
+         shake-to-toggle or any feature that posts a notification. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Installs fine on devices without a flash; the app then shows the
+         Screen light tab only. -->
+    <uses-feature
+        android:name="android.hardware.camera.flash"
+        android:required="false" />
+
+    <application
+        android:label="Beam"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:allowBackup="true"
+        android:supportsRtl="true"
+        android:theme="@style/NormalTheme">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:taskAffinity=""
+            android:theme="@style/LaunchTheme"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|screenLayout|smallestScreenSize|uiMode|density|fontScale"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- Home-screen shortcut target: opens straight into the lit state. -->
+            <intent-filter>
+                <action android:name="com.afzal.beam.action.LIGHT_ON" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+            <meta-data
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme" />
+        </activity>
+
+        <!-- Quick Settings tile: toggles the torch without opening the app.
+             Long-press opens the app (active tile). -->
+        <service
+            android:name=".BeamTileService"
+            android:exported="true"
+            android:label="Beam"
+            android:icon="@mipmap/ic_launcher"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.ACTIVE_TILE"
+                android:value="com.afzal.beam.BeamTileService" />
+        </service>
+
+        <!-- Shake-to-toggle listener. specialUse with an explicit justification. -->
+        <service
+            android:name=".ShakeService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Listens to the accelerometer to toggle the flashlight on two quick shakes." />
+        </service>
+
+        <!-- Handles the "Turn off" / "Turn off shake" notification actions. -->
+        <receiver
+            android:name=".TorchActionReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.afzal.beam.action.TORCH_OFF" />
+                <action android:name="com.afzal.beam.action.SHAKE_OFF" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Don't let Flutter's tooling add its own debug/profile entries. -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+    </application>
+</manifest>

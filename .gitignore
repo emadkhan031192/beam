@@ -1,0 +1,17 @@
+# Flutter
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+build/
+.idea/
+
+# Android
+android/local.properties
+android/.gradle/
+android/app/build/
+android/build/
+**/beam-release.jks
+
+# Misc
+*.iml
+.DS_Store

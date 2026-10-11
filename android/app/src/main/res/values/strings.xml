@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="shortcut_light_on">Light on</string>
+    <string name="shortcut_light_on_long">Turn the flashlight on</string>
+</resources>

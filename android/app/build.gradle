@@ -1,0 +1,70 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+// Release signing comes from CI secrets. When any of them is missing the
+// release build falls back to debug signing so CI never fails.
+def keystoreBase64 = System.getenv("KEYSTORE_BASE64")
+def keystorePassword = System.getenv("KEYSTORE_PASSWORD")
+def keyAlias = System.getenv("KEY_ALIAS")
+def keyPassword = System.getenv("KEY_PASSWORD")
+def hasReleaseSigning = keystoreBase64?.trim() &&
+        keystorePassword?.trim() && keyAlias?.trim() && keyPassword?.trim()
+
+android {
+    namespace = "com.afzal.beam"
+    compileSdk = 35
+
+    defaultConfig {
+        applicationId = "com.afzal.beam"
+        //noinspection MinSdkTooLow
+        minSdk = 24
+        targetSdk = 35
+        versionCode = 1
+        versionName = "1.0"
+    }
+
+    signingConfigs {
+        if (hasReleaseSigning) {
+            release {
+                def ksFile = new File(rootProject.buildDir, "beam-release.jks")
+                ksFile.parentFile.mkdirs()
+                ksFile.bytes = keystoreBase64.decodeBase64()
+                storeFile = ksFile
+                storePassword = keystorePassword
+                keyAlias = keyAlias
+                keyPassword = keyPassword
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            // Falls back to debug signing when no keystore secrets exist.
+            signingConfig = hasReleaseSigning ? signingConfigs.release : signingConfigs.debug
+            minifyEnabled = true
+            shrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+        debug {
+            // Debug builds skip shrinking for speed.
+            minifyEnabled = false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+}
+
+flutter {
+    source = "../.."
+}
+
+dependencies {}

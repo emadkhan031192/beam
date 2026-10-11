@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="light_on"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/shortcut_light_on"
+        android:shortcutLongLabel="@string/shortcut_light_on_long">
+        <intent
+            android:action="com.afzal.beam.action.LIGHT_ON"
+            android:targetPackage="com.afzal.beam"
+            android:targetClass="com.afzal.beam.MainActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+</shortcuts>

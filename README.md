@@ -102,5 +102,9 @@ Store — add the secrets before a store release.)
 - **Battery:** `battery_plus` was intentionally not used; the battery percent
   comes from the sticky `ACTION_BATTERY_CHANGED` broadcast over an
   EventChannel (no extra dependency, no polling).
-- **APK size:** the < 8 MB-per-ABI target is pursued via R8 + resource
-  shrinking and zero network/image assets; the Flutter engine sets the floor.
+- **APK size:** the < 8 MB-per-ABI target is not achievable with Flutter:
+  release APKs (R8 + resource shrinking, split per ABI) measure
+  arm64-v8a 17.5 MB, armeabi-v7a 14.9 MB, x86_64 19.0 MB. The Flutter engine
+  (`libflutter.so`, ~11.7 MB uncompressed per ABI) plus Dart AOT (~4 MB) set
+  the floor; fonts add ~1.2 MB. An 8 MB target would need a fully native
+  (non-Flutter) app.

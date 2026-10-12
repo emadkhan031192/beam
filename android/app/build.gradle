@@ -6,12 +6,12 @@ plugins {
 
 // Release signing comes from CI secrets. When any of them is missing the
 // release build falls back to debug signing so CI never fails.
-def keystoreBase64 = System.getenv("KEYSTORE_BASE64")
-def keystorePassword = System.getenv("KEYSTORE_PASSWORD")
-def keyAlias = System.getenv("KEY_ALIAS")
-def keyPassword = System.getenv("KEY_PASSWORD")
-def hasReleaseSigning = keystoreBase64?.trim() &&
-        keystorePassword?.trim() && keyAlias?.trim() && keyPassword?.trim()
+def ksBase64 = System.getenv("KEYSTORE_BASE64")
+def ksStorePassword = System.getenv("KEYSTORE_PASSWORD")
+def ksKeyAlias = System.getenv("KEY_ALIAS")
+def ksKeyPassword = System.getenv("KEY_PASSWORD")
+def hasReleaseSigning = ksBase64?.trim() && ksStorePassword?.trim() &&
+        ksKeyAlias?.trim() && ksKeyPassword?.trim()
 
 android {
     namespace = "com.afzal.beam"
@@ -31,11 +31,11 @@ android {
             release {
                 def ksFile = new File(rootProject.buildDir, "beam-release.jks")
                 ksFile.parentFile.mkdirs()
-                ksFile.bytes = keystoreBase64.decodeBase64()
+                ksFile.bytes = ksBase64.decodeBase64()
                 storeFile = ksFile
-                storePassword = keystorePassword
-                keyAlias = keyAlias
-                keyPassword = keyPassword
+                storePassword = ksStorePassword
+                keyAlias = ksKeyAlias
+                keyPassword = ksKeyPassword
             }
         }
     }

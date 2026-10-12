@@ -46,3 +46,19 @@ jobs:
         with:
           name: beam-apks
           path: build/app/outputs/flutter-apk/*.apk
+
+      - name: Build Play Store bundle (AAB)
+        run: flutter build appbundle --release
+        env:
+          # Same signing as the APKs: release key when the secrets exist,
+          # debug fallback otherwise (the Gradle build handles it).
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: beam-aab
+          path: build/app/outputs/bundle/release/*.aab

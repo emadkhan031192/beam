@@ -108,6 +108,15 @@ object TorchManager {
             cm.registerTorchCallback(mainHandler::post, object : CameraManager.TorchCallback() {
                 override fun onTorchModeChanged(cameraId: String, enabled: Boolean) {
                     if (cameraId != this@TorchManager.cameraId) return
+                    if (patternHandler != null) {
+                        // Strobe/SOS toggles the LED itself on this thread; the
+                        // resulting callbacks are expected noise from our own
+                        // pattern, not an external state change. Never stop the
+                        // pattern here — doing so killed strobe on its first
+                        // off-toggle. (Camera conflicts still arrive via
+                        // onTorchModeUnavailable below.)
+                        return
+                    }
                     // The callback is the source of truth: confirm real state.
                     if (enabled != isOn) {
                         isOn = enabled

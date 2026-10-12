@@ -60,8 +60,9 @@ class _BeamIconPainter extends CustomPainter {
     final path = Path();
     switch (kind) {
       case BeamIconKind.power:
-        // Arc with a gap at top + vertical line.
-        path.addArc(const Rect.fromLTWH(6, 7, 12, 12), -0.35 * 3.14159,
+        // Arc with the gap centered at 12 o'clock + vertical line through it.
+        // (start -0.15π, sweep 1.3π leaves a 0.7π gap centered at the top.)
+        path.addArc(const Rect.fromLTWH(6, 7, 12, 12), -0.15 * 3.14159,
             2 * 3.14159 - 0.7 * 3.14159);
         canvas.drawPath(path, p);
         canvas.drawLine(const Offset(12, 4), const Offset(12, 11), p);

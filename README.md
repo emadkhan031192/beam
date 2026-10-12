@@ -47,6 +47,12 @@ If any secret is missing, the Gradle build signs the release with the debug
 key instead, so CI never fails. (Debug-signed APKs can't go to the Play
 Store — add the secrets before a store release.)
 
+> Status 2026-10-11: a dedicated Beam upload keystore (`beam`, RSA 2048)
+> was generated and all four secrets are already configured, so CI builds
+> are release-signed. A backup of the keystore is kept outside the repo —
+> keep the passwords in a password manager; losing the upload key means a
+> new Play Store app listing.
+
 ## Changing the app name and icon
 
 - **Name:** `android:label` in

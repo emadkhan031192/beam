@@ -74,7 +74,7 @@ class _BeamAppState extends ConsumerState<BeamApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Beam',
+      title: 'Beam Flash Light',
       debugShowCheckedModeBanner: false,
       theme: beamTheme(),
       home: const _Shell(),
